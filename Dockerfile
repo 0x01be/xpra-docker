@@ -1,10 +1,6 @@
-FROM alpine:3.12.0 as builder
+FROM 0x01be/alpine:edge as builder
 
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/main > /etc/apk/repositories
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
- 
-RUN apk add --no-cache --virtual build-dependencies \
+RUN apk add --no-cache --virtual xpra-build-dependencies \
     subversion \
     build-base \
     python3-dev \
@@ -30,11 +26,7 @@ WORKDIR /xpra/src/
 
 RUN python3 ./setup.py install --home=/opt/xpra/
 
-FROM alpine:3.12.0
-
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/main > /etc/apk/repositories
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+FROM 0x01be/alpine:edge
 
 RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     python3 \
