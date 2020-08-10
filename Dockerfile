@@ -1,4 +1,4 @@
-FROM 0x01be/alpine:edge as builder
+FROM alpine as builder
 
 RUN apk add --no-cache --virtual xpra-build-dependencies \
     subversion \
@@ -26,7 +26,7 @@ WORKDIR /xpra/src/
 
 RUN python3 ./setup.py install --home=/opt/xpra/
 
-FROM 0x01be/alpine:edge
+FROM alpine
 
 RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     python3 \
@@ -34,7 +34,6 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-rencode \
     py3-pillow \
     py3-cairo \
-    py3-inotify \
     py3-xdg \
     dbus-x11 \
     gstreamer \
