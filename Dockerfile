@@ -37,7 +37,8 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-xdg \
     dbus-x11 \
     gstreamer \
-    xvfb
+    xvfb \
+    gtk+3.0
 
 COPY --from=builder /opt/xpra/bin/ /usr/bin/
 COPY --from=builder /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
