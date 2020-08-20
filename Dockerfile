@@ -49,3 +49,9 @@ COPY --from=builder /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
 RUN mkdir -p /run/user/0/
 
+ENV COMMAND 'echo "Extend this image and then\ndocker run -e COMMAND=mygui -p 10000:10000 ... myimage"'
+
+EXPOSE 10000
+
+CMD /usr/bin/xpra start --bind-tcp=0.0.0.0:10000 --html=on --start-child="$COMMAND" --exit-with-children --daemon=no --xvfb="/usr/bin/Xvfb +extension  Composite -screen 0 1280x720x24+32 -nolisten tcp -noreset" --pulseaudio=no --notifications=no --bell=no --mdns=no
+
