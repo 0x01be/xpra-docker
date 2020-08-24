@@ -38,7 +38,9 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     dbus-x11 \
     gstreamer \
     xvfb \
-    gtk+3.0
+    gtk+3.0 \
+    gnome-icon-theme \
+    ttf-freefont
 
 COPY --from=builder /opt/xpra/bin/ /usr/bin/
 COPY --from=builder /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
@@ -47,11 +49,18 @@ COPY --from=builder /opt/xpra/etc/xpra/ /etc/xpra/
 COPY --from=builder /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
 COPY --from=builder /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
-RUN mkdir -p /run/user/0/
+ENV COMMAND 'echo "Extend this image or\ndocker run -e COMMAND=mygui -p 10000:10000 ... myimage"'
 
-ENV COMMAND 'echo "Extend this image and then\ndocker run -e COMMAND=mygui -p 10000:10000 ... myimage"'
+RUN mkdir -p /run/user/0/
+RUN mkdir /workspace
+RUN adduser -D -u 1000 xpra
+RUN chown -R xpra:xpra /workspace
+
+USER xpra
 
 EXPOSE 10000
+
+WORKDIR /workspace
 
 CMD /usr/bin/xpra start --bind-tcp=0.0.0.0:10000 --html=on --start-child="$COMMAND" --exit-with-children --daemon=no --xvfb="/usr/bin/Xvfb +extension  Composite -screen 0 1280x720x24+32 -nolisten tcp -noreset" --pulseaudio=no --notifications=no --bell=no --mdns=no
 
