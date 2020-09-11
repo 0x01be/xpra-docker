@@ -51,9 +51,10 @@ COPY --from=builder /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
 ENV COMMAND 'echo "Extend this image or\ndocker run -e COMMAND=mygui -p 10000:10000 ... myimage"'
 
-RUN mkdir -p /run/user/1000/
+RUN mkdir -p /run/user/1000/xpra
 RUN mkdir /workspace
 RUN adduser -D -u 1000 xpra
+RUN chown -R xpra:xpra /run/user/1000/xpra
 RUN chown -R xpra:xpra /workspace
 
 USER xpra
