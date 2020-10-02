@@ -9,6 +9,8 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-pillow \
     py3-cairo \
     py3-xdg \
+    py3-dbus \
+    py3-requests \
     dbus-x11 \
     gstreamer \
     xvfb \
@@ -46,5 +48,5 @@ EXPOSE 10000
 
 WORKDIR /workspace
 
-CMD /usr/bin/xpra start --bind-tcp=0.0.0.0:10000 --html=on --start-child="$COMMAND" --exit-with-children --daemon=no --xvfb="/usr/bin/Xvfb +extension  Composite -screen 0 1280x720x24+32 -nolisten tcp -noreset" --pulseaudio=no --notifications=no --bell=no --mdns=no
+CMD /usr/bin/xpra start --bind-tcp=0.0.0.0:10000 --html=on --start-child="$COMMAND" --exit-with-children --daemon=no --xvfb="/usr/bin/Xvfb +extension  Composite -screen 0 1280x720x24+32 -nolisten tcp -noreset" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no --global-menus=no --speaker=off --ssl=off
 
