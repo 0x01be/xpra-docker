@@ -1,4 +1,4 @@
-FROM alpine as builder
+FROM arm32v6/alpine
 
 RUN apk add --no-cache --virtual xpra-build-dependencies \
     subversion \
