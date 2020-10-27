@@ -3,8 +3,6 @@ FROM alpine:3.12.1 as builder
 RUN apk add --no-cache --virtual xpra-build-dependencies \
     subversion \
     build-base \
-    python3-dev \
-    cython \
     pkgconfig \
     libx11-dev \
     libxrandr-dev \
@@ -13,9 +11,12 @@ RUN apk add --no-cache --virtual xpra-build-dependencies \
     libxcomposite-dev \
     libxdamage-dev \
     gtk+3.0-dev \
+    python3-dev \
     py3-pip \
-    gobject-introspection-dev \
+    py3-cairo-dev \
     py3-gobject3-dev \
+    gobject-introspection-dev \
+    cython \
     xorg-server \
     gstreamer-dev \
     alsa-lib-dev \
@@ -25,8 +26,6 @@ RUN apk add --no-cache --virtual xpra-build-dependencies \
     lz4-dev \
     x264-dev \
     libvpx-dev
-
-RUN pip install pycairo
 
 RUN svn co https://xpra.org/svn/Xpra/trunk /xpra
 
