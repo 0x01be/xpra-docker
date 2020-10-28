@@ -52,5 +52,8 @@ WORKDIR ${WORKSPACE}
 EXPOSE ${PORT}
 
 ENV SCREEN "1280x720x24+32"
-CMD ["/usr/bin/xpra", "start" ,"--bind-tcp=0.0.0.0:${PORT}",  "--html=on", "--start-child=${COMMAND}", "--exit-with-children" , "--daemon=no", "--xvfb='/usr/bin/Xvfb +extension  Composite -screen 0 ${SCREEN} -nolisten tcp -noreset'", "--pulseaudio=no", "--notifications=no", "--bell=no", "--mdns=no"]
+ENV FRAMEBUFFER "/usr/bin/Xvfb +extension  Composite -screen 0 ${SCREEN} -nolisten tcp -noreset"
+ENV INTERFACE "0.0.0.0:${PORT}"
+
+CMD "/usr/bin/xpra start --bind-tcp=${INTERFACE} --html=on --start-child=${COMMAND} --exit-with-children --daemon=no --xvfb=${FRAMEBUFFER} --pulseaudio=no --notifications=no --bell=no --mdns=no"
 
