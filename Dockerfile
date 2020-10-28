@@ -33,7 +33,7 @@ COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
 COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
 ENV WORKSPACE /home/xpra
-ENV COMMAND 'echo "Extend this image and set COMMAND'"
+ENV COMMAND 'echo "Extend this image and set COMMAND"'
 
 ENV GUID 1000
 ENV USER xpra
