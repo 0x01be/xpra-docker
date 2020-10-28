@@ -32,21 +32,25 @@ COPY --from=build /opt/xpra/etc/xpra/ /etc/xpra/
 COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
 COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
-ENV COMMAND 'echo "Extend this image or\ndocker run -e COMMAND=mygui -p 10000:10000 ... myimage"'
+ENV WORKSPACE /home/xpra
+ENV COMMAND 'echo "Extend this image and set COMMAND'"
 
-RUN mkdir -p /run/user/1000/xpra
-RUN mkdir -p /run/xpra
-RUN mkdir -p /workspace
-RUN adduser -D -u 1000 xpra
-RUN chown -R xpra:xpra /run/user/1000/xpra
-RUN chown -R xpra:xpra /run/xpra
-RUN chown -R xpra:xpra /workspace
+ENV GUID 1000
+ENV USER xpra
+RUN adduser -D -u ${GUID} ${USER}
+RUN mkdir -p /run/user/${GUID}/${USER}
+RUN mkdir -p /run/${USER}
+RUN mkdir -p ${WORKSPACE}
+RUN chown -R ${USER}:${USER} /run/user/${GUID}/${USER}
+RUN chown -R ${USER}:${USER} /run/${USER}
+RUN chown -R ${USER}:${USER} ${WORKSPACE}
 
-USER xpra
+ENV PORT 10000
 
-EXPOSE 10000
+USER ${USER}
+WORKDIR ${WORKSPACE}
+EXPOSE ${PORT}
 
-WORKDIR /workspace
-
-CMD ["/usr/bin/xpra start" ,"--bind-tcp=0.0.0.0:10000",  "--html=on", "--start-child=$COMMAND", "--exit-with-children" , "--daemon=no", "--xvfb='/usr/bin/Xvfb +extension  Composite -screen 0 1280x720x24+32 -nolisten tcp -noreset'", "--pulseaudio=no", "--notifications=no", "--bell=no", "--mdns=no"]
+ENV SCREEN "1280x720x24+32"
+CMD ["/usr/bin/xpra", "start" ,"--bind-tcp=0.0.0.0:${PORT}",  "--html=on", "--start-child=${COMMAND}", "--exit-with-children" , "--daemon=no", "--xvfb='/usr/bin/Xvfb +extension  Composite -screen 0 ${SCREEN} -nolisten tcp -noreset'", "--pulseaudio=no", "--notifications=no", "--bell=no", "--mdns=no"]
 
