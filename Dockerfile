@@ -20,9 +20,7 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     ttf-freefont \
     ffmpeg \
     jpeg \
-    x264 \
-    zlib \
-    lz4
+    x264
 
 COPY --from=build /opt/xpra/bin/ /usr/bin/
 COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
