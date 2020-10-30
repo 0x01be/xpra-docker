@@ -36,7 +36,7 @@ ENV WORKSPACE /home/xpra
 RUN adduser -D -u ${UID} ${USER} &&\
     mkdir -p /run/user/${UID}/${USER} &&\
     mkdir -p /run/${USER} &&\
-    mkdir -p ${WORKSPACE} &&\
+    mkdir -p ${WORKSPACE}/.config/pulse &&\
     chown -R ${USER}:${USER} /run/user/${UID}/${USER} &&\
     chown -R ${USER}:${USER} /run/${USER} &&\
     chown -R ${USER}:${USER} ${WORKSPACE} &&\
