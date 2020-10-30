@@ -22,8 +22,7 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     x264 \
     libvpx \
     zlib \
-    lz4 \
-    alsa-lib
+    lz4-static 
 
 COPY --from=build /opt/xpra/bin/ /usr/bin/
 COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
@@ -34,26 +33,26 @@ COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
 ENV WORKSPACE /home/xpra
 
-ENV GUID 1000
+ENV UID 1000
 ENV USER xpra
-RUN adduser -D -u ${GUID} ${USER}
-RUN mkdir -p /run/user/${GUID}/${USER}
+RUN adduser -D -u ${UID} ${USER}
+RUN mkdir -p /run/user/${UID}/${USER}
 RUN mkdir -p /run/${USER}
 RUN mkdir -p ${WORKSPACE}
-RUN chown -R ${USER}:${USER} /run/user/${GUID}/${USER}
+RUN chown -R ${USER}:${USER} /run/user/${UID}/${USER}
 RUN chown -R ${USER}:${USER} /run/${USER}
 RUN chown -R ${USER}:${USER} ${WORKSPACE}
 
 ENV PORT 10000
 
-# This image is meant to be extended so we keep the user as root to ease installing package in descendents
+# This image is meant to be extended so we keep the user as root to ease installing packages in descendents
 #USER ${USER}
 ENV COMMAND 'echo "Extend this image and set COMMAND"'
 WORKDIR ${WORKSPACE}
 EXPOSE ${PORT}
 
 ENV SCREEN "1280x720x24+32"
-ENV FRAMEBUFFER "/usr/bin/Xvfb +extension  Composite -screen 0 ${SCREEN} -nolisten tcp -noreset"
+ENV FRAMEBUFFER "/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset"
 ENV INTERFACE "0.0.0.0:${PORT}"
 
 CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child=${COMMAND} --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no
