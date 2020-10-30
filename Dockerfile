@@ -46,9 +46,9 @@ RUN adduser -D -u ${UID} ${USER} &&\
 
 ENV PORT 10000
 
-# This image is meant to be extended so we keep the user as root to ease installing packages in descendents
+# This is meant to be extended so we keep the user as root to ease installing packages in child images
 #USER ${USER}
-ENV COMMAND "echo Extend..."
+ENV COMMAND "echo ***TODO***"
 WORKDIR ${WORKSPACE}
 EXPOSE ${PORT}
 
