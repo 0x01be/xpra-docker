@@ -24,12 +24,19 @@ RUN apk add --no-cache --virtual xpra-build-dependencies \
     jpeg-dev \
     zlib-dev \
     lz4-dev \
+    lzo-dev \
+    brotli-dev \
     x264-dev \
-    libvpx-dev
+    libvpx-dev \
+    npm
+
+RUN npm install -g uglify-js
 
 RUN svn co https://xpra.org/svn/Xpra/trunk /xpra
 
 WORKDIR /xpra/src/
+
+RUN python3 ./setup.py --help
 
 RUN python3 ./setup.py install \
     --home=/opt/xpra/ \
