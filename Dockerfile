@@ -1,6 +1,6 @@
 FROM 0x01be/xpra:build as build
 
-FROM alpine
+FROM alpine:3.12.1
 
 RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     python3 \
@@ -48,7 +48,7 @@ ENV PORT 10000
 
 # This image is meant to be extended so we keep the user as root to ease installing packages in descendents
 #USER ${USER}
-ENV COMMAND 'echo "Extend this image and set COMMAND"'
+ENV COMMAND "echo Extend..."
 WORKDIR ${WORKSPACE}
 EXPOSE ${PORT}
 
