@@ -47,7 +47,8 @@ RUN adduser -D -u ${UID} ${USER} &&\
     chown -R ${USER}:${USER} /run/${USER} &&\
     chown -R ${USER}:${USER} ${WORKSPACE} &&\
     mkdir -p /tmp/.X11-unix &&\
-    chmod 1777 /tmp/.X11-unix
+    chmod 1777 /tmp/.X11-unix &&\
+    chmod -R 775 /run/xpra
 
 ENV PORT 10000
 
