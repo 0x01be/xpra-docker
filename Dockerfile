@@ -56,5 +56,5 @@ ENV SCREEN "1280x720x24+32"
 ENV FRAMEBUFFER "/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset"
 ENV INTERFACE "0.0.0.0:${PORT}"
 
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child=${COMMAND} --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no
 
