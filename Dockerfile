@@ -22,7 +22,11 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     x264 \
     libvpx \
     zlib \
-    lz4-static 
+    lzo \
+    lz4 \
+    lz4-static \
+    brotli \
+    brotli-static
 
 COPY --from=build /opt/xpra/bin/ /usr/bin/
 COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
@@ -31,17 +35,19 @@ COPY --from=build /opt/xpra/etc/xpra/ /etc/xpra/
 COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
 COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
-ENV WORKSPACE /home/xpra
-
 ENV UID 1000
 ENV USER xpra
-RUN adduser -D -u ${UID} ${USER}
-RUN mkdir -p /run/user/${UID}/${USER}
-RUN mkdir -p /run/${USER}
-RUN mkdir -p ${WORKSPACE}
-RUN chown -R ${USER}:${USER} /run/user/${UID}/${USER}
-RUN chown -R ${USER}:${USER} /run/${USER}
-RUN chown -R ${USER}:${USER} ${WORKSPACE}
+ENV WORKSPACE /home/xpra
+
+RUN adduser -D -u ${UID} ${USER} &&\
+    mkdir -p /run/user/${UID}/${USER} &&\
+    mkdir -p /run/${USER} &&\
+    mkdir -p ${WORKSPACE} &&\
+    chown -R ${USER}:${USER} /run/user/${UID}/${USER} &&\
+    chown -R ${USER}:${USER} /run/${USER} &&\
+    chown -R ${USER}:${USER} ${WORKSPACE} &&\
+    mkdir -p /tmp/.X11-unix &&\
+    chmod 1777 /tmp/.X11-unix
 
 ENV PORT 10000
 
