@@ -11,6 +11,7 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-xdg \
     py3-dbus \
     py3-requests \
+    py3-lz4 \
     dbus-x11 \
     gstreamer \
     xvfb \
@@ -20,13 +21,8 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     ffmpeg \
     jpeg \
     x264 \
-    libvpx \
     zlib \
-    lzo \
-    lz4 \
-    lz4-static \
-    brotli \
-    brotli-static
+    lz4
 
 COPY --from=build /opt/xpra/bin/ /usr/bin/
 COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
@@ -62,5 +58,5 @@ ENV SCREEN "1280x720x24+32"
 ENV FRAMEBUFFER "/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset"
 ENV INTERFACE "0.0.0.0:${PORT}"
 
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child=${COMMAND} --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child=${COMMAND} --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no
 
