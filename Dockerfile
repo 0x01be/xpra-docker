@@ -34,8 +34,8 @@ ENV UID=1000 \
     WORKSPACE=/home/xpra \
     PORT=10000 \
     COMMAND="echo ***TODO***" \
-    SCREEN="1280x720x24+32" \
-    FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
+    SCREEN="1280x800x24+32"
+ENV FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
     INTERFACE="0.0.0.0:${PORT}"
 
 RUN adduser -D -u ${UID} ${USER} &&\
