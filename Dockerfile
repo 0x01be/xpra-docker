@@ -29,9 +29,14 @@ COPY --from=build /opt/xpra/etc/xpra/ /etc/xpra/
 COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
 COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
 
-ENV UID 1000
-ENV USER xpra
-ENV WORKSPACE /home/xpra
+ENV UID=1000 \
+    USER=xpra \
+    WORKSPACE=/home/xpra \
+    PORT=10000 \
+    COMMAND="echo ***TODO***" \
+    SCREEN="1280x800x24+32" \
+    FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
+    INTERFACE="0.0.0.0:${PORT}"
 
 RUN adduser -D -u ${UID} ${USER} &&\
     mkdir -p /run/user/${UID}/${USER} &&\
@@ -44,17 +49,9 @@ RUN adduser -D -u ${UID} ${USER} &&\
     chmod 1777 /tmp/.X11-unix &&\
     chmod -R 775 /run/xpra
 
-ENV PORT 10000
-
 # This is meant to be extended so we keep the user as root to ease installing packages in child images
 #USER ${USER}
-ENV COMMAND "echo ***TODO***"
-WORKDIR ${WORKSPACE}
 EXPOSE ${PORT}
-
-ENV SCREEN "1280x720x24+32"
-ENV FRAMEBUFFER "/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset"
-ENV INTERFACE "0.0.0.0:${PORT}"
-
+WORKDIR ${WORKSPACE}
 CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no
 
