@@ -1,6 +1,6 @@
 FROM 0x01be/xpra:build as build
 
-FROM alpine:3.12.1
+FROM alpine
 
 RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     python3 \
