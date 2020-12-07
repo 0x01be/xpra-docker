@@ -36,7 +36,8 @@ ENV UID=1000 \
     COMMAND="echo ***TODO***" \
     SCREEN="1280x800x24+32"
 ENV FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
-    INTERFACE="0.0.0.0:${PORT}"
+    INTERFACE="0.0.0.0:${PORT}" \
+    SHARING=yes
 
 RUN adduser -D -u ${UID} ${USER} &&\
     mkdir -p /run/user/${UID}/${USER} &&\
@@ -53,5 +54,5 @@ RUN adduser -D -u ${UID} ${USER} &&\
 #USER ${USER}
 EXPOSE ${PORT}
 WORKDIR ${WORKSPACE}
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no --sharing=yes
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING}
 
