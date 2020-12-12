@@ -1,6 +1,23 @@
 FROM 0x01be/xpra:build as build
 
-FROM alpine
+FROM 0x01be/base
+
+COPY --from=build /opt/xpra/bin/ /usr/bin/
+COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
+COPY --from=build /opt/xpra/share/xpra/ /usr/share/xpra/
+COPY --from=build /opt/xpra/etc/xpra/ /etc/xpra/
+COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
+COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
+
+ENV UID=1000 \
+    USER=xpra \
+    WORKSPACE=/home/xpra \
+    PORT=10000 \
+    COMMAND="echo ***TODO***" \
+    SCREEN="1280x800x24+32"
+ENV FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
+    INTERFACE="0.0.0.0:${PORT}" \
+    SHARING=yes
 
 RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     python3 \
@@ -20,26 +37,8 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     ttf-freefont \
     ffmpeg \
     jpeg \
-    x264
-
-COPY --from=build /opt/xpra/bin/ /usr/bin/
-COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
-COPY --from=build /opt/xpra/share/xpra/ /usr/share/xpra/
-COPY --from=build /opt/xpra/etc/xpra/ /etc/xpra/
-COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
-COPY --from=build /opt/xpra/etc/dbus-1/system.d/ /etc/dbus-1/system.d/
-
-ENV UID=1000 \
-    USER=xpra \
-    WORKSPACE=/home/xpra \
-    PORT=10000 \
-    COMMAND="echo ***TODO***" \
-    SCREEN="1280x800x24+32"
-ENV FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
-    INTERFACE="0.0.0.0:${PORT}" \
-    SHARING=yes
-
-RUN adduser -D -u ${UID} ${USER} &&\
+    x264 &&\
+    adduser -D -u ${UID} ${USER} &&\
     mkdir -p /run/user/${UID}/${USER} &&\
     mkdir -p /run/${USER} &&\
     mkdir -p ${WORKSPACE}/.config/pulse &&\
