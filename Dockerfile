@@ -1,4 +1,4 @@
-FROM arm32v6/alpine:3.12.1
+FROM 0x01be/base:arm32v6
 
 RUN apk add --no-cache --virtual xpra-build-dependencies \
     subversion \
@@ -28,15 +28,11 @@ RUN apk add --no-cache --virtual xpra-build-dependencies \
     brotli-dev \
     x264-dev \
     libvpx-dev \
-    npm
-
-RUN npm install -g uglify-js
-
-RUN svn co https://xpra.org/svn/Xpra/trunk /xpra
+    npm &&\
+    npm install -g uglify-js &&\
+    svn co https://xpra.org/svn/Xpra/trunk /xpra
 
 WORKDIR /xpra/src/
-
-RUN python3 ./setup.py --help
 
 RUN python3 ./setup.py install \
     --home=/opt/xpra/ \
