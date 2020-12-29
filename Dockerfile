@@ -1,6 +1,6 @@
-FROM 0x01be/xpra:build as build
+FROM 0x01be/xpra:build-arm32v6 as build
 
-FROM 0x01be/base
+FROM 0x01be/base:arm32v6
 
 COPY --from=build /opt/xpra/bin/ /usr/bin/
 COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
