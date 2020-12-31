@@ -53,5 +53,5 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
 #USER ${USER}
 EXPOSE ${PORT}
 WORKDIR ${WORKSPACE}
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING}
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard-direction=both -d clipboard
 
