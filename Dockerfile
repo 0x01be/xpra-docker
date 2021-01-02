@@ -37,7 +37,12 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     ttf-freefont \
     ffmpeg \
     jpeg \
-    x264 &&\
+    x264 \
+    pulseaudio \
+    gstreamer \
+    alsa-lib \
+    pulseaudio-alsa \
+    alsa-plugins-pulse &&\
     adduser -D -u ${UID} ${USER} &&\
     mkdir -p /run/user/${UID}/${USER} &&\
     mkdir -p /run/${USER} &&\
@@ -53,5 +58,5 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
 #USER ${USER}
 EXPOSE ${PORT}
 WORKDIR ${WORKSPACE}
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard-direction=both -d clipboard
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --speaker=off --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard=yes --clipboard-direction=both  --encoding=h264 --resize-display=1080p
 
