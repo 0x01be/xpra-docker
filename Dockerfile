@@ -37,6 +37,7 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-requests \
     py3-lz4 \
     py3-paramiko \
+    py3-netifaces \
     dbus-x11 \
     gstreamer \
     xvfb \
@@ -67,7 +68,8 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     mkdir -p /tmp/.X11-unix &&\
     chmod 1777 /tmp/.X11-unix &&\
     chmod -R 775 /run/${USER} &&\
-    chmod -R 700 /run/user/${UID}/${USER}
+    chmod -R 700 /run/user/${UID}/${USER} &&\
+    mkdir -p /etc/xdg/menus/ && echo "<Menu/>" > /etc/xdg/menus/kde-applications.menu
 
 # This is meant to be extended so we keep the user as root to ease installing packages in child images
 #USER ${USER}
