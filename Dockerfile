@@ -39,7 +39,6 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-paramiko \
     py3-netifaces \
     dbus-x11 \
-    gstreamer \
     xvfb \
     gtk+3.0 \
     gnome-icon-theme \
