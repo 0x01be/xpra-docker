@@ -1,9 +1,15 @@
 FROM 0x01be/xpra:build as build
 
+FROM 0x01be/base as uinput
+
+RUN apk add py3-pip build-base python3-dev linux-headers eudev
+RUN pip3 install --prefix=/opt/uinput python-uinput
+
 FROM 0x01be/base
 
 COPY --from=build /opt/xpra/bin/ /usr/bin/
 COPY --from=build /opt/xpra/lib/python/ /usr/lib/python3.8/site-packages/
+COPY --from=uinput /opt/uinput/ /opt/uinput/
 COPY --from=build /opt/xpra/share/xpra/ /usr/share/xpra/
 COPY --from=build /opt/xpra/etc/xpra/ /etc/xpra/
 COPY --from=build /opt/xpra/etc/X11/xorg.conf.d/ /etc/X11/xorg.conf.d/
@@ -17,7 +23,8 @@ ENV UID=1000 \
     SCREEN="1280x800x24+32"
 ENV FRAMEBUFFER="/usr/bin/Xvfb +extension GLX +extension RANDR +extension RENDER +extension Composite -screen 0 ${SCREEN} -nolisten tcp -noreset" \
     INTERFACE="0.0.0.0:${PORT}" \
-    SHARING=yes
+    SHARING=yes \
+    PYTHONPATH=/usr/lib/python3.8/site-packages:/opt/uinput/lib/python3.8/site-packages
 
 RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     python3 \
@@ -29,6 +36,7 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     py3-dbus \
     py3-requests \
     py3-lz4 \
+    py3-paramiko \
     dbus-x11 \
     gstreamer \
     xvfb \
@@ -42,7 +50,13 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     gstreamer \
     alsa-lib \
     pulseaudio-alsa \
-    alsa-plugins-pulse &&\
+    alsa-plugins-pulse \
+    eudev &&\
+    apk add --no-cache --virtual xpra-edge-runtime-dependencies \
+    --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+    --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+    --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+    py3-inotify &&\
     adduser -D -u ${UID} ${USER} &&\
     mkdir -p /run/user/${UID}/${USER} &&\
     mkdir -p /run/${USER} &&\
@@ -59,5 +73,5 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
 #USER ${USER}
 EXPOSE ${PORT}
 WORKDIR ${WORKSPACE}
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --speaker=off --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard=yes --clipboard-direction=both  --encoding=h264 --resize-display=1080p --ssl=off
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --speaker=off --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard=yes --clipboard-direction=both --ssl=off
 
