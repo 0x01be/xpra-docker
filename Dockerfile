@@ -52,11 +52,12 @@ RUN apk add --no-cache --virtual xpra-runtime-dependencies \
     chown -R ${USER}:${USER} ${WORKSPACE} &&\
     mkdir -p /tmp/.X11-unix &&\
     chmod 1777 /tmp/.X11-unix &&\
-    chmod -R 775 /run/xpra
+    chmod -R 775 /run/${USER} &&\
+    chmod -R 700 /run/user/${UID}/${USER}
 
 # This is meant to be extended so we keep the user as root to ease installing packages in child images
 #USER ${USER}
 EXPOSE ${PORT}
 WORKDIR ${WORKSPACE}
-CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --speaker=off --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard=yes --clipboard-direction=both  --encoding=h264 --resize-display=1080p
+CMD xpra start --bind-tcp=${INTERFACE} --html=on --start-child="${COMMAND}" --exit-with-children --daemon=no --xvfb="${FRAMEBUFFER}" --pulseaudio=no --speaker=off --notifications=no --bell=no --mdns=no --webcam=no --sharing=${SHARING} --clipboard=yes --clipboard-direction=both  --encoding=h264 --resize-display=1080p --ssl=off
 
